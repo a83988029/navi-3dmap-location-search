@@ -14,4 +14,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'pow-amapall-no-libc'
+rootProject.name = 'navi-3dmap-location-search'
