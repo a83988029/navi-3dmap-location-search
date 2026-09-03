@@ -22,4 +22,4 @@ Push this project to a public GitHub repository and create a tag such as `11.1.2
 com.github.<github-user>:navi-3dmap-location-search:11.1.200-no-libc.1
 ```
 
-The tag must be built successfully on JitPack before changing the consuming UTS plugin.
+The repository includes `jitpack.yml` so JitPack publishes the Gradle Maven publication explicitly. The tag must be built successfully on JitPack before changing the consuming UTS plugin.
