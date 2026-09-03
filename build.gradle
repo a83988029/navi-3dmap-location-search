@@ -1,0 +1,44 @@
+plugins {
+    id 'base'
+    id 'maven-publish'
+}
+
+group = 'com.github.a83988029'
+version = providers.gradleProperty('releaseVersion').orElse('11.1.200-no-libc.1').get()
+
+def sourceJar = file('src/main/input/navi-3dmap-location-search-11.1.200_3dmap11.1.200_loc11.1.200_sea9.7.4.jar')
+
+tasks.register('amapNoLibcJar', Jar) {
+    archiveBaseName = 'navi-3dmap-location-search'
+    archiveVersion = project.version
+    destinationDirectory = layout.buildDirectory.dir('libs')
+    from zipTree(sourceJar)
+    exclude 'lib/**/libc++_shared.so'
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    doFirst {
+        if (!sourceJar.isFile()) {
+            throw new GradleException("Missing source SDK JAR: ${sourceJar}")
+        }
+    }
+}
+
+tasks.named('assemble') {
+    dependsOn tasks.named('amapNoLibcJar')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = 'navi-3dmap-location-search'
+            version = project.version
+            artifact tasks.named('amapNoLibcJar')
+            pom {
+                name = 'AMap navi 3dmap location search without libc++_shared'
+                description = 'AMap 11.1.200 SDK repackaged without bundled libc++_shared.so; the host application supplies the common C++ runtime.'
+                packaging = 'jar'
+            }
+        }
+    }
+}
